@@ -16,7 +16,8 @@ class LazyJobChecker():
     '''
     def __init__(self, companyList):
         self.companyList = companyList
-        self.cursor = sqlite3.connect('companies.db').cursor()
+        self.conn = sqlite3.connect('companies.db')
+        self.cursor = self.conn.cursor()
         self.pastDict = {}
         self.addItems = {}
         self.removeItems = {}
@@ -43,6 +44,7 @@ class LazyJobChecker():
             for company in list(self.addItems.keys()):
                 for job in self.addItems[company]:
                     self.cursor.execute(add_statement, (company, job))
+        self.conn.commit()
         
     def updateCompanies(self, updateItems):
         for item in updateItems:
@@ -92,15 +94,17 @@ class LazyJobChecker():
     def notify(self):
         if self.addItems:
             message = ''
-            for k, v in list(self.addItems):
-                message += f'{k} has new openings for these jobs: {v}\n'
-            print(message)
+            for k, v in list(self.addItems.items()):
+                if len(v) > 0:
+                    message += f'{k} has new openings for these jobs: {v}\n'
+            if message:
+                print(message)
 
 def create_db():
     conn = sqlite3.connect('companies.db')
     cursor = conn.cursor()
     create_statement = '''CREATE TABLE jobs (
-        ID INT PRIMARY KEY NOT NULL, company textTEXT NOT NULL, job TEXT NOT NULL
+        ID INTEGER PRIMARY KEY NOT NULL, company TEXT NOT NULL, job TEXT NOT NULL
     )'''
     cursor.execute(create_statement)
 
