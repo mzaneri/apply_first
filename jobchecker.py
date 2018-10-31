@@ -1,4 +1,4 @@
-import sentry_sdk, sqlite3, requests
+import sentry_sdk, sqlite3
 from sentry_sdk import capture_message
 from lxml import html
 from selenium import webdriver
@@ -45,9 +45,6 @@ class LazyJobChecker():
                 for job in self.addItems[company]:
                     self.cursor.execute(add_statement, (company, job))
                     self.conn.commit()
-
-                    
-        
         
     def updateCompanies(self, updateItems):
         for item in updateItems:
@@ -79,46 +76,10 @@ class LazyJobChecker():
             self.findDiffs()
             self.notify()
 
-    def headEqual(self, name, url, size=None):
-        r = requests.head(url)
-        try:
-            newSize = r.headers['Content-Length']
-        except KeyError:
-            print(f'{name} need to learn about the content-length header')
-            return False
-        if newSize == 0:
-            return False
-        if newSize == size:
-            return True
-        #true upsert is added in newest version fo sqlite 3, not on all systems    
-        insertTable = ''' INSERT OR IGNORE INTO career_pages (company, size) VALUES (?, ?)'''
-        self.cursor.execute(insertTable, (name, newSize))
-        self.conn.commit()
-        updateTable = '''UPDATE career_pages SET size = ? WHERE company = ?'''
-        self.cursor.execute(updateTable, (newSize, name))
-        self.conn.commit()
-        return False
-
-    def findUpdated(self):
-        #checks to see if company is in db, if it is does a head request first to see if 'Content-Length' has changed
-        new = []
-        all_companies = '''SELECT size FROM career_pages WHERE company = ?'''
-        for company in self.companyList:
-            self.cursor.execute(all_companies, (company.name,))
-            size = self.cursor.fetchone()
-            if size:
-                if not self.headEqual(company.name, company.jobUrl, size):
-                    new.append(company)
-            else:
-                self.headEqual(company.name, company.jobUrl)
-                new.append(company)
-        self.companyList = new
-
     def checker(self):        
-        self.findUpdated()
         if len(self.companyList) > 0:
             self.checkDict = {company.name: [] for company in self.companyList}
-            self.browser = webdriver.Firefox()
+            self.browser = webdriver.Chrome('/usr/bin/chromium-browser')
             for company in self.companyList:
                 self.browser.get(company.jobUrl)
                 self.requester(company)
@@ -137,6 +98,8 @@ class LazyJobChecker():
                     message += f'{k} has new openings for these jobs: {v}\n'
             if message:
                 print(message)
+            else:
+                print('no changes')
     
     def testXPath(self):
         self.browser = webdriver.Firefox()
@@ -148,15 +111,3 @@ class LazyJobChecker():
             else:
                 results = [opening.strip() for opening in self.openings if 'engineer' in opening.lower()]
                 print(results)
-
-def create_db():
-    conn = sqlite3.connect('companies.db')
-    cursor = conn.cursor()
-    create_jobs = '''CREATE TABLE IF NOT EXISTS jobs (
-        ID INTEGER PRIMARY KEY NOT NULL, company TEXT NOT NULL, job TEXT NOT NULL
-    )'''
-    cursor.execute(create_jobs)
-    create_career_pages = '''CREATE TABLE IF NOT EXISTS career_pages (
-        ID INTEGER PRIMARY KEY NOT NULL, company TEXT UNIQUE NOT NULL, size INTEGER NOT NULL
-    )'''
-    cursor.execute(create_career_pages)
