@@ -129,6 +129,19 @@ class LazyJobChecker():
                     message += f'{k} has new openings for these jobs: {v}\n'
             if message:
                 print(message)
+    
+    def testXPath(self):
+        self.browser = webdriver.Firefox()
+        for company in self.companyList:
+            self.browser.get(company.jobUrl)
+            self.requester(company)
+            if len(self.openings) == 0:
+                print(f'Theres some problem from the {company.name} careers page')
+            else:
+                results = [opening.strip() for opening in self.openings if 'engineer' in opening.lower()]
+                print(results)
+
+
 
 def create_db():
     conn = sqlite3.connect('companies.db')
@@ -157,5 +170,10 @@ with open ('companies.txt', 'r') as f:
         new_company = Company(new[0], new[1], new[2])
         companyList.append(new_company)
 
+#test_companies = ['airbnb', 'test']
+#companyList = [company for company in companyList if company.name in test_companies]
+
 test = LazyJobChecker(companyList)
 test.checker()
+
+#test.testXPath()

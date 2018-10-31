@@ -1,4 +1,5 @@
 affirm https://www.affirm.com/openings/ /html/body/section[1]/div/div/div/div/div[5]/a[*]/span[1]/text()
+airbnb https://www.airbnb.com/careers/departments/engineering /html/body/main/div[6]/section/table/tbody/tr[*]/td[1]/a/text()
 asana https://asana.com/jobs/all /html/body/section[2]/div/div/div/div[1]/div[*]/div[2]/a[*]/div[1]/strong/text()
 checkr https://checkr.com/careers/ /html/body/div[5]/main/article/section[4]/div[2]/div/div[4]/a[*]/span/text()
 coinbase https://www.coinbase.com/careers /html/body/div[2]/div[2]/section[2]/div/div[2]/h4[*]/a/text()
