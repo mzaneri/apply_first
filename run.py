@@ -10,7 +10,7 @@ create_db()
 app = Flask(__name__)
 
 cron = BackgroundScheduler(daemon=True)
-cron.add_job(func=job, trigger='interval', seconds=120)
+cron.add_job(func=job, trigger='interval', seconds=15)
 cron.start()
 
 atexit.register(lambda: cron.shutdown())

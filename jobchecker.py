@@ -79,7 +79,10 @@ class LazyJobChecker():
     def checker(self):        
         if len(self.companyList) > 0:
             self.checkDict = {company.name: [] for company in self.companyList}
-            self.browser = webdriver.Chrome('/usr/bin/chromium-browser')
+            chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_argument('--headless')
+            chrome_options.add_argument('--no-sandbox')
+            self.browser = webdriver.Chrome('/usr/bin/chromedriver', chrome_options=chrome_options)
             for company in self.companyList:
                 self.browser.get(company.jobUrl)
                 self.requester(company)
