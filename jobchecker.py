@@ -38,12 +38,16 @@ class LazyJobChecker():
             for company in list(self.removeItems.keys()):
                 for job in self.removeItems[company]:
                     self.cursor.execute(delete_statement, (company, job))
+                    self.conn.commit()
         if len(self.addItems) != 0:
             add_statement = '''INSERT INTO jobs (company, job) VALUES (?, ?)'''
             for company in list(self.addItems.keys()):
                 for job in self.addItems[company]:
                     self.cursor.execute(add_statement, (company, job))
-        self.conn.commit()
+                    self.conn.commit()
+
+                    
+        
         
     def updateCompanies(self, updateItems):
         for item in updateItems:
@@ -89,8 +93,10 @@ class LazyJobChecker():
         #true upsert is added in newest version fo sqlite 3, not on all systems    
         insertTable = ''' INSERT OR IGNORE INTO career_pages (company, size) VALUES (?, ?)'''
         self.cursor.execute(insertTable, (name, newSize))
+        self.conn.commit()
         updateTable = '''UPDATE career_pages SET size = ? WHERE company = ?'''
         self.cursor.execute(updateTable, (newSize, name))
+        self.conn.commit()
         return False
 
     def findUpdated(self):
