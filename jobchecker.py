@@ -1,5 +1,4 @@
-import sentry_sdk
-import sqlite3
+import sentry_sdk, sqlite3, requests
 from sentry_sdk import capture_message
 from lxml import html
 from selenium import webdriver
@@ -21,7 +20,7 @@ class LazyJobChecker():
         self.pastDict = {}
         self.addItems = {}
         self.removeItems = {}
-        
+
     def getOld(self):
         #gets all exisiting jobs, adds them to a dict
         sql_statement = '''SELECT company, job FROM jobs'''
@@ -76,20 +75,51 @@ class LazyJobChecker():
             self.findDiffs()
             self.notify()
 
-    def checker(self, companies=None):
-        if companies == None:
-            companies = self.companyList
-        self.checkDict = {company.name: [] for company in companies}
-        self.browser = webdriver.Firefox()
-        for company in companies:
-            self.browser.get(company.jobUrl)
-            self.requester(company)
-            if len(self.openings) == 0:
-                capture_message(f'Theres some problem from the {company.name} careers page')
+    def headEqual(self, name, url, size=None):
+        r = requests.head(url)
+        try:
+            newSize = r.headers['Content-Length']
+        except KeyError:
+            print(f'{name} need to learn about the content-length header')
+            return False
+        if newSize == size:
+            return True
+        #true upsert is added in newest version fo sqlite 3, not on all systems    
+        insertTable = ''' INSERT OR IGNORE INTO career_pages (company, size) VALUES (?, ?)'''
+        self.cursor.execute(insertTable, (name, newSize))
+        updateTable = '''UPDATE career_pages SET size = ? WHERE company = ?'''
+        self.cursor.execute(updateTable, (newSize, name))
+        return False
+
+    def findUpdated(self):
+        #checks to see if company is in db, if it is does a head request first to see if 'Content-Length' has changed
+        new = []
+        all_companies = '''SELECT size FROM career_pages WHERE company = ?'''
+        for company in self.companyList:
+            self.cursor.execute(all_companies, (company.name,))
+            size = self.cursor.fetchone()
+            if size:
+                if not self.headEqual(company.name, company.jobUrl, size):
+                    new.append(company)
             else:
-                self.openings = [opening for opening in self.openings if 'engineer' in opening.lower()]
-                self.checkDict[company.name].extend(self.openings)
-        self.databaseEdit()
+                self.headEqual(company.name, company.jobUrl)
+                new.append(company)
+        self.companyList = new
+
+    def checker(self):        
+        self.findUpdated()
+        if len(self.companyList) > 0:
+            self.checkDict = {company.name: [] for company in self.companyList}
+            self.browser = webdriver.Firefox()
+            for company in self.companyList:
+                self.browser.get(company.jobUrl)
+                self.requester(company)
+                if len(self.openings) == 0:
+                    capture_message(f'Theres some problem from the {company.name} careers page')
+                else:
+                    self.openings = [opening.strip() for opening in self.openings if 'engineer' in opening.lower()]
+                    self.checkDict[company.name].extend(self.openings)
+            self.databaseEdit()
     
     def notify(self):
         if self.addItems:
@@ -103,10 +133,14 @@ class LazyJobChecker():
 def create_db():
     conn = sqlite3.connect('companies.db')
     cursor = conn.cursor()
-    create_statement = '''CREATE TABLE jobs (
+    create_jobs = '''CREATE TABLE jobs (
         ID INTEGER PRIMARY KEY NOT NULL, company TEXT NOT NULL, job TEXT NOT NULL
     )'''
-    cursor.execute(create_statement)
+    cursor.execute(create_jobs)
+    create_career_pages = '''CREATE TABLE career_pages (
+        ID INTEGER PRIMARY KEY NOT NULL, company TEXT UNIQUE NOT NULL, size INTEGER NOT NULL
+    )'''
+    cursor.execute(create_career_pages)
 
 #create_db()
 
@@ -123,7 +157,5 @@ with open ('companies.txt', 'r') as f:
         new_company = Company(new[0], new[1], new[2])
         companyList.append(new_company)
 
-problems = ['gusto', 'sentry']
-companyList = [x for x in companyList if x.name in problems]
 test = LazyJobChecker(companyList)
 test.checker()
