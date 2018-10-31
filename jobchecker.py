@@ -143,39 +143,14 @@ class LazyJobChecker():
                 results = [opening.strip() for opening in self.openings if 'engineer' in opening.lower()]
                 print(results)
 
-
-
 def create_db():
     conn = sqlite3.connect('companies.db')
     cursor = conn.cursor()
-    create_jobs = '''CREATE TABLE jobs (
+    create_jobs = '''CREATE TABLE IF NOT EXISTS jobs (
         ID INTEGER PRIMARY KEY NOT NULL, company TEXT NOT NULL, job TEXT NOT NULL
     )'''
     cursor.execute(create_jobs)
-    create_career_pages = '''CREATE TABLE career_pages (
+    create_career_pages = '''CREATE TABLE IF NOT EXISTS career_pages (
         ID INTEGER PRIMARY KEY NOT NULL, company TEXT UNIQUE NOT NULL, size INTEGER NOT NULL
     )'''
     cursor.execute(create_career_pages)
-
-#create_db()
-
-Company = namedtuple('Company', ['name', 'jobUrl', 'xpath'])
-
-companyList = []
-
-with open ('companies.txt', 'r') as f:
-    for line in f:
-        new = line.split(' ')
-        if len(new) != 3:
-            #raise some exception cause you messed up the txt doc
-            pass
-        new_company = Company(new[0], new[1], new[2])
-        companyList.append(new_company)
-
-#test_companies = ['airbnb', 'test']
-#companyList = [company for company in companyList if company.name in test_companies]
-
-test = LazyJobChecker(companyList)
-test.checker()
-
-#test.testXPath()
