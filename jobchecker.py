@@ -82,6 +82,8 @@ class LazyJobChecker():
         except KeyError:
             print(f'{name} need to learn about the content-length header')
             return False
+        if newSize == 0:
+            return False
         if newSize == size:
             return True
         #true upsert is added in newest version fo sqlite 3, not on all systems    
