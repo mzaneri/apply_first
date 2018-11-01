@@ -4,7 +4,7 @@ from lxml import html
 from selenium import webdriver
 from collections import namedtuple
 
-SENTRY_KEY = str(os.envrion['SENTRY_KEY'])
+SENTRY_KEY = str(os.environ['SENTRY_KEY'])
 
 '''
 sentry_sdk.init(

@@ -1,4 +1,4 @@
 #!/bin/sh
 
 source bin/activate
-python3 run.py
+python3 app.py
