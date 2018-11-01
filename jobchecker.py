@@ -1,13 +1,17 @@
-import sentry_sdk, sqlite3
+import sentry_sdk, sqlite3, os
 from sentry_sdk import capture_message
 from lxml import html
 from selenium import webdriver
 from collections import namedtuple
+
+SENTRY_KEY = str(os.envrion['SENTRY_KEY'])
+
 '''
 sentry_sdk.init(
-    dsn="https://1b70f6cd397c4d5a8da2dba23481906f@sentry.io/1311619"
+    dsn=SENTRY_KEY
 )
 '''
+
 class LazyJobChecker():
     '''
     The success rate of applying to jobs is much higher if you apply to them as soon as they are out.

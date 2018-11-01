@@ -1,7 +1,7 @@
 from jobchecker import LazyJobChecker
 from collections import namedtuple
 
-def job():
+def scrape():
     Company = namedtuple('Company', ['name', 'jobUrl', 'xpath'])
 
     companyList = []
@@ -22,6 +22,6 @@ def job():
 
     #test.testXPath()
 
-#job()
+#scrape()
 
 

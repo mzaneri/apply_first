@@ -3,14 +3,14 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask
 from jobchecker import LazyJobChecker
 from create_db import create_db
-from job import job
+from scrape import scrape
 
 create_db()
 
 app = Flask(__name__)
 
 cron = BackgroundScheduler(daemon=True)
-cron.add_job(func=job, trigger='interval', seconds=15)
+cron.add_job(func=scrape, trigger='interval', seconds=30)
 cron.start()
 
 atexit.register(lambda: cron.shutdown())
