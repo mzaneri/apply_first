@@ -6,11 +6,10 @@ from collections import namedtuple
 
 SENTRY_KEY = str(os.environ['SENTRY_KEY'])
 
-'''
 sentry_sdk.init(
-    dsn=SENTRY_KEY
-)
-'''
+    dsn=SENTRY_KEY,
+    integrations=[FlaskIntegration()]
+) 
 
 class LazyJobChecker():
     '''
@@ -105,6 +104,7 @@ class LazyJobChecker():
                     message += f'{k} has new openings for these jobs: {v}\n'
             if message:
                 print(message)
+                capture_message(message)
             else:
                 print('no changes')
     

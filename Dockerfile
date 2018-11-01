@@ -10,7 +10,6 @@ COPY requirements.txt requirements.txt
 RUN python -m venv .
 RUN bin/pip install --upgrade pip
 RUN bin/pip install -r requirements.txt
-RUN bin/pip install --upgrade sentry-sdk[flask]==0.5.2
 
 RUN wget https://chromedriver.storage.googleapis.com/2.43/chromedriver_linux64.zip
 RUN unzip chromedriver_linux64.zip -d /usr/bin
