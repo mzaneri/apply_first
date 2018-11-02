@@ -29,19 +29,47 @@
 
     I then decided to dockerize the app for deployment.
 
-### Instruction to create a Docker image
+## Instruction to create a Docker image
 
-    Clone the repo.
+    'git clone https://github.com/mzaneri/apply_first.git && cd apply_first'
 
-    Create flask app project in Sentry.io(you must signup first).
+    Install docker - https://docs.docker.com/install/
 
-    Copy the sentry sdk key into the Dockerfile
+    Signup for an account at https://sentry.io/. Once created you will be
+    prompted to signup for a project. Select 'Flask' and click on
+    'Create Project'
+
+    ![alt text](https://i.imgur.com/I8mnx8M.png)
+
+    Copy the sentry sdk dsn key into the Dockerfile
+
+    ![alt text](https://i.imgur.com/OZV04BN.png)
+
+    ![alt text](https://i.imgur.com/6tDbi6o.png)
     
-    Build the image, and deploy.
+    Build the image
+
+    'docker build -t your_image_name'
+
+    Deploy
+
+## Instructions to add your own companies    
 
     To add companies to companies.txt, you must find their career page
     url and proper XPath.
 
     I used https://github.com/trembacz/xpath-finder and used a wildcard
     in the proper html element to only get engineering jobs.
+
+    Here's an example using Uber's career page:
+
+    ![alt text](https://i.imgur.com/ucJgwyX.png)
+
+    ![alt text](https://i.imgur.com/aYmapLd.png)
+    
+    Notice that between the 2 entries,the li element changes from 1 to 2.
+    This is where you take this XPath and put a wildcard (*) where the 
+    number is to account for all entries that fit this pattern.
+
+    Note that it will not always be a list element, it can be any type.
 

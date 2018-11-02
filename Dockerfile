@@ -18,7 +18,7 @@ RUN chmod +x /usr/bin/chromedriver
 COPY run.sh app.py create_db.py jobchecker.py scrape.py  companies.txt ./
 RUN chmod +x run.sh
 
-ENV SENTRY_KEY ---SeCrEt_KeY---
+ENV SENTRY_KEY ****CHANGE_ME****
 
 EXPOSE 5000
 ENTRYPOINT ["./run.sh"]
