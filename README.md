@@ -8,7 +8,8 @@
     anymore, I want to be the first person to apply to a job opening.
 
     This started out as a simple script using requests to make get
-    requests to career pages, and using lxml and an XPath found using https://github.com/trembacz/xpath-finder. I quickly found that this
+    requests to career pages, and using lxml and an XPath found using
+    https://github.com/trembacz/xpath-finder. I quickly found that this
     was a bad tactic to scrape, as a lot more sites than I’d expected
     use dynamically created careers pages.
 
