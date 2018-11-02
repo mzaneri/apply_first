@@ -1,5 +1,6 @@
 import sentry_sdk, sqlite3, os
 from sentry_sdk import capture_message
+from sentry_sdk.integrations.flask import FlaskIntegration
 from lxml import html
 from selenium import webdriver
 from collections import namedtuple
@@ -98,14 +99,13 @@ class LazyJobChecker():
     
     def notify(self):
         if self.addItems:
+            flag = False
             message = ''
             for k, v in list(self.addItems.items()):
                 if len(v) > 0:
-                    message += f'{k} has new openings for these jobs: {v}\n'
-            if message:
-                print(message)
-                capture_message(message)
-            else:
+                    flag = True
+                    capture_message(f'{k} has new openings for these jobs: {v}\n')
+            if not flag:
                 print('no changes')
     
     def testXPath(self):
