@@ -3,7 +3,6 @@ from sentry_sdk import capture_message
 from sentry_sdk.integrations.flask import FlaskIntegration
 from lxml import html
 from selenium import webdriver
-from collections import namedtuple
 
 SENTRY_KEY = str(os.environ['SENTRY_KEY'])
 
@@ -88,8 +87,11 @@ class LazyJobChecker():
             chrome_options.add_argument('--no-sandbox')
             self.browser = webdriver.Chrome('/usr/bin/chromedriver', chrome_options=chrome_options)
             for company in self.companyList:
-                self.browser.get(company.jobUrl)
-                self.requester(company)
+                for scrape_try in range(3):
+                    self.browser.get(company.jobUrl)
+                    self.requester(company)
+                    if len(self.openings) > 0:
+                        break
                 if len(self.openings) == 0:
                     capture_message(f'Theres some problem from the {company.name} careers page')
                 else:
