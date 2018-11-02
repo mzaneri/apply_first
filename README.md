@@ -33,9 +33,15 @@
 
     Clone the repo.
 
-    Create flask app project in Sentry.io(you must signup first).  
+    Create flask app project in Sentry.io(you must signup first).
 
     Copy the sentry sdk key into the Dockerfile
     
     Build the image, and deploy.
+
+    To add companies to companies.txt, you must find their career page
+    url and proper XPath.
+
+    I used https://github.com/trembacz/xpath-finder and used a wildcard
+    in the proper html element to only get engineering jobs.
 
