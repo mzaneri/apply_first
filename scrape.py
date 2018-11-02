@@ -11,7 +11,7 @@ def scrape():
             if len(new) != 3:
                 #raise some exception cause you messed up the txt doc
                 pass
-            new_company = Company(new[0], new[1], new[2])
+            new_company = Company(new[0], new[1], new[2] + '/text()')
             companyList.append(new_company)
 
     #test_companies = ['airbnb', 'test']
