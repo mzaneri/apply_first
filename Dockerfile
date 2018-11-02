@@ -1,7 +1,7 @@
 FROM python:3.7-slim-stretch
 
 RUN apt-get update && apt-get install -qq -y \
-  build-essential libpq-dev libffi-dev unzip python-selenium wget \
+  build-essential libpq-dev libffi-dev unzip python-selenium wget chromium\
   --no-install-recommends 
 
 WORKDIR /usr/app
@@ -18,7 +18,7 @@ RUN chmod +x /usr/bin/chromedriver
 COPY run.sh app.py create_db.py jobchecker.py scrape.py  companies.txt ./
 RUN chmod +x run.sh
 
-ENV SENTRY_KEY ****your_sentry_api_project_key****
+ENV SENTRY_KEY ---SeCrEt_KeY---
 
 EXPOSE 5000
 ENTRYPOINT ["./run.sh"]
