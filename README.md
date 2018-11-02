@@ -39,13 +39,13 @@
     prompted to signup for a project. Select 'Flask' and click on
     'Create Project'
 
-    ![alt text](https://i.imgur.com/I8mnx8M.png)
+    ![](https://i.imgur.com/I8mnx8M.png)
 
     Copy the sentry sdk dsn key into the Dockerfile
 
-    ![alt text](https://i.imgur.com/OZV04BN.png)
+    ![](https://i.imgur.com/OZV04BN.png)
 
-    ![alt text](https://i.imgur.com/6tDbi6o.png)
+    ![](https://i.imgur.com/6tDbi6o.png)
     
     Build the image
 
@@ -63,9 +63,9 @@
 
     Here's an example using Uber's career page:
 
-    ![alt text](https://i.imgur.com/ucJgwyX.png)
+![](https://i.imgur.com/ucJgwyX.png)
 
-    ![alt text](https://i.imgur.com/aYmapLd.png)
+    ![](https://i.imgur.com/aYmapLd.png)
     
     Notice that between the 2 entries,the li element changes from 1 to 2.
     This is where you take this XPath and put a wildcard (*) where the 
