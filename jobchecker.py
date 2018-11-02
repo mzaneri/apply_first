@@ -63,6 +63,7 @@ class LazyJobChecker():
         self.addItems = {companyName: self.checkDict[companyName] for companyName in addItems}
         removeItems = set(self.pastDict.keys()) - set(self.checkDict.keys())
         self.removeItems = {companyName: self.pastDict[companyName] for companyName in removeItems}
+        #self.removeItems = {} -> possible update if more failing problems occur
         updateItems =  set(self.pastDict.keys()) & (set(self.checkDict.keys()))
         self.updateCompanies(updateItems)
 
