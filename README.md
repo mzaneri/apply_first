@@ -1,4 +1,8 @@
-# apply_first
+## apply_first
+
+    apply_first regularly scrapes career pages and notifies you when a
+    new job has been posted so you can be the first to apply, increasing
+    your chance of a response.
 
 ## Background
 
@@ -39,13 +43,7 @@
     prompted to signup for a project. Select 'Flask' and click on
     'Create Project'
 
-![](https://i.imgur.com/I8mnx8M.png)
-
     Copy the sentry sdk dsn key into the Dockerfile
-
-![](https://i.imgur.com/OZV04BN.png)
-
-![](https://i.imgur.com/6tDbi6o.png)
     
     Build the image
 
@@ -58,18 +56,13 @@
     To add companies to companies.txt, you must find their career page
     url and proper XPath.
 
-    I used https://github.com/trembacz/xpath-finder and used a wildcard
-    in the proper html element to only get engineering jobs.
+    I used https://github.com/trembacz/xpath-finder to hover over the
+    text of each job title which will show that elements Xpath.
 
-    Here's an example using Uber's career page:
-
-![](https://i.imgur.com/ucJgwyX.png)
-
-![](https://i.imgur.com/aYmapLd.png)
-    
-    Notice that between the 2 entries,the li element changes from 1 to 2.
-    This is where you take this XPath and put a wildcard (*) where the 
-    number is to account for all entries that fit this pattern.
+    If you go back and forth between the 2 entries in the same section, 
+    one of the element changes its numerical value. You now take this XPath
+    and replace this number with a wildcard (*) to account for all entries 
+    that fit this pattern.
 
     Note that it will not always be a list element, it can be any type.
 
